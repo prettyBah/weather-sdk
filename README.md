@@ -115,9 +115,9 @@ var customConfig = new WeatherCacheableWrapperClient.Config(
 
 // With background refresh
 var refreshConfig = new WeatherCacheableWrapperClient.Config(
-    Duration.ofMinutes(10),     // TTL
+    Duration.ofMinutes(10),      // TTL
     50,                          // Limit
-    true,                        // Enable refresh
+    true,                        // Refresh update (true) / Refresh delete (false)
     Duration.ofMinutes(5)        // Refresh interval
 );
 ```
@@ -125,7 +125,7 @@ var refreshConfig = new WeatherCacheableWrapperClient.Config(
 **Cache Features:**
 - **TTL (Time To Live)**: How long cached entries remain valid
 - **Limit**: Maximum number of entries in cache (LRU eviction when limit reached)
-- **Background Refresh**: Automatically refreshes expired entries in the background
+- **Background Refresh Update**: Automatically update expired entries in the background
 
 ## Examples
 
@@ -173,13 +173,13 @@ try (var cachedClient = new WeatherCacheableWrapperClient(baseClient, cacheConfi
 }
 ```
 
-### Example 3: With Background Refresh
+### Example 3: With Background Refresh Update
 
 ```java
 var cacheConfig = new WeatherCacheableWrapperClient.Config(
-    Duration.ofMinutes(10),  // Cache for 10 minutes
-    50,                       // Max 50 entries
-    true,                     // Enable refresh
+    Duration.ofMinutes(10),    // Cache for 10 minutes
+    50,                        // Max 50 entries
+    true,                      // Enable refresh update
     Duration.ofMinutes(5)      // Refresh every 5 minutes
 );
 

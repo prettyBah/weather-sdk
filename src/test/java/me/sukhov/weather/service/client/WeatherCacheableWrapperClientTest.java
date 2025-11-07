@@ -61,8 +61,8 @@ public class WeatherCacheableWrapperClientTest {
     }
 
     @Test
-    @DisplayName("Should automatically refresh expired cache entries in background")
-    public void testCacheGetByCiteNameWithRefreshSuccess() {
+    @DisplayName("Should automatically update expired cache entries in background")
+    public void testCacheGetByCiteNameWithRefreshUpdateSuccess() {
         WeatherApi api = mock(WeatherApi.class);
 
         var config = new WeatherCacheableWrapperClient.Config(
@@ -77,6 +77,25 @@ public class WeatherCacheableWrapperClientTest {
         }
 
         verify(api, atLeast(2)).getByCityName(eq(WeatherDataRequest.builder().cityName("Zocca").build()));
+    }
+
+    @Test
+    @DisplayName("Should automatically delete expired cache entries in background")
+    public void testCacheGetByCiteNameWithRefreshDeleteSuccess() {
+        WeatherApi api = mock(WeatherApi.class);
+
+        var config = new WeatherCacheableWrapperClient.Config(
+                Duration.ofMillis(50), 100, false, Duration.ofMillis(200)
+        );
+
+        try (var client = new WeatherCacheableWrapperClient(api, config)) {
+            client.getByCityName(WeatherDataRequest.builder().cityName("Zocca").build());
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Assertions.fail(e);
+        }
+
+        verify(api, times(1)).getByCityName(eq(WeatherDataRequest.builder().cityName("Zocca").build()));
     }
 
 }

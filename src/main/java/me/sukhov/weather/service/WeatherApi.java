@@ -5,7 +5,7 @@ import me.sukhov.weather.dto.response.WeatherDataResponse;
 import me.sukhov.weather.exception.WeatherException;
 
 /**
- * Interface for retrieving weather data by city name.
+ * Interface for retrieving weather data.
  */
 public interface WeatherApi {
 
