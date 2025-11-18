@@ -13,19 +13,51 @@ A Java SDK for retrieving weather data from the OpenWeatherMap API with built-in
 Add the following to your `build.gradle`:
 
 ```gradle
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/prettyBah/weather-sdk")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")          
+        }
+    }
+}
+
+...
+
 dependencies {
-    implementation 'me.sukhov.weather:open-weather-map-client:1.0.0'
+    implementation 'me.sukhov.weather:weather-sdk:1.0.0'
 }
 ```
 
 ### Maven
 
 ```xml
+
+<servers>
+    <server>
+        <id>github-weather-sdk</id>
+        <username>${env.GITHUB_USER}</username>
+        <password>${env.GITHUB_TOKEN}</password>
+    </server>
+</servers>
+
+        <!-- -->
+
+<repository>
+    <id>github-weather-sdk</id>
+    <name>GitHub prettyBah Apache Maven Packages</name>
+    <url>https://maven.pkg.github.com/prettyBah/weather-sdk</url>
+</repository>
+
+        <!---->
+
 <dependency>
     <groupId>me.sukhov.weather</groupId>
-    <artifactId>open-weather-map-client</artifactId>
+    <artifactId>weather-sdk</artifactId>
     <version>1.0.0</version>
 </dependency>
+
 ```
 
 ## Quick Start
@@ -123,6 +155,7 @@ var refreshConfig = new WeatherCacheableWrapperClient.Config(
 ```
 
 **Cache Features:**
+
 - **TTL (Time To Live)**: How long cached entries remain valid
 - **Limit**: Maximum number of entries in cache (LRU eviction when limit reached)
 - **Background Refresh Update**: Automatically update expired entries in the background

@@ -208,8 +208,6 @@ public class WeatherCacheableWrapperClient implements WeatherApi, AutoCloseable 
         try {
             cache.forEach((key, entry) -> {
                 if (entry.isExpired()) {
-                    // Use remove with key-value check for atomicity
-                    // Only removes if the entry hasn't been updated by another thread
                     cache.remove(key, entry);
                 }
             });

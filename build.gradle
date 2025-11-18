@@ -1,5 +1,11 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+
+    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.composeHotReload) apply false
+    alias(libs.plugins.composeMultiplatform) apply false
+    alias(libs.plugins.composeCompiler) apply false
 }
 
 group = 'me.sukhov.weather'
@@ -7,24 +13,17 @@ version = '1.0.0'
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
-    // Jackson
-    implementation("com.fasterxml.jackson.core:jackson-databind:$jaksonVersion")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jaksonVersion")
-
-    // logs
-    implementation("org.slf4j:slf4j-api:$slf4jVersion")
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation(libs.bundles.jakson)
+    implementation(libs.bundles.logs)
 
     // tests
-    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
-    testImplementation("org.mockito:mockito-core:$mockitoVersion")
-    testImplementation("org.mockito:mockito-junit-jupiter:$mockitoVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("com.squareup.okhttp3:mockwebserver:$mockwebserverVersion")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation(platform(libs.junit.bom))
+    testRuntimeOnly(libs.junit.platform.launcher)
+    implementation(libs.bundles.javaTest)
 }
 
 test {
@@ -32,4 +31,20 @@ test {
     jvmArgs += [
             "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}"
     ]
+}
+
+publishing {
+    publications {
+        gpr(MavenPublication)
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/prettyBah/weather-sdk"
+            credentials {
+                username = "username"
+                password = "token"
+            }
+        }
+    }
 }
